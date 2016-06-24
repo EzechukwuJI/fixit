@@ -1,0 +1,59 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+{% block portfolio %}
+
+{% block header %}	
+	{{ block.super }}
+{% endblock header %}
+
+
+<div class="padding-lg-sides">
+	{% if inactive %}
+		<span class="alert alert-danger text-center">
+			This account has been deactivated. Please send a mail to activate@ndoozi.com 
+			<br/><br/>
+		</span>
+	{% elif  denied or error %}
+		<span class="text-danger text-center">
+			The login details you supplied are incorrect. Please check and try again.
+			<br/><br/>
+		</span>
+	{% elif is_tradesman %}
+		<span class="text-danger text-center">
+			Please log in with your customer account details
+			<br/><br/>
+		</span>
+	{% elif is_customer %}
+		<span class="text-danger text-center">
+			Please log in with your Tradesman account details
+			<br/><br/>
+		</span>
+	{% endif %}
+	
+
+	<div class="row bg-white border-rounded-thin">
+		<div class="col-lg-12 padding-xs-sides text-center">
+
+			<img src="{% static "fixit/img/welcome.JPG" %}" class="pull-left" alt="ndoozi.com" />
+
+								 <strong> <i>Hello!!! &nbsp; </i><span> {{ username|title }},</span> &nbsp; Thank you for signing up on Ndoozi.com, your trusted and loyal tradesmen finder <br/><br/>A confirmation email containing your password and other information has been sent to<br/> <i class="text-info">{{ useremail }} </i>. </strong>
+								
+								<br/><br/><br/>
+								{% if emailprovider == "gmail" %}
+									<a href = "https://accounts.google.com/ServiceLogin?service=mail&passive=true&rm=false&continue=https://mail.google.com/mail/&ss=1&scc=1&ltmpl=default&ltmplcache=2&emr=1&osid=1#identifier" class= "btn btn-xl btn-primary align-center" target="blank"> <h6>Go to your mailbox </h6></a>
+
+								{% elif emailprovider == "yahoo" %}
+
+									<a href = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com" class= "btn btn-xl btn-primary align-center" target="blank"> <h6>Go to your mailbox </h6></a>
+
+								{% elif emailprovider == "ymail" %}
+									<a href = "https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com" class= "btn btn-xl btn-primary align-center" target="blank"> <h6>Go to your mailbox </h6></a>
+								{% endif %}
+
+			
+		</div> 
+	</div>
+</div>
+
+{% endblock portfolio %}

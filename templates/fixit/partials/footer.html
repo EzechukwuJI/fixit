@@ -1,0 +1,199 @@
+{% load staticfiles %}
+ <div class="footer-above">
+
+            <div class="container">
+                <div class="padding-sm-sides">
+
+                    <div class="row">
+                        <div class="footer-col col-md-3">
+                            <div class="footer-list">
+                                <h5>General</h5>
+                                <li>
+                                    <a href="{% url "fixitMain:TandC" %}">
+                                        Terms and conditions
+                                    </a>
+                                </li>
+                                <!--<li>-->
+                                <!--    <a href="">-->
+                                <!--        Registration-->
+                                <!--    </a>-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                <!--    <a href="{% url "fixitMain:blog" %}">-->
+                                <!--        Blog-->
+                                <!--    </a>-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                <!--    <a href="{% url "fixitMain:careers" %}">-->
+                                <!--        Careers-->
+                                <!--    </a>-->
+                                <!--</li>-->
+
+
+                                <li class="page-scroll">
+                        <a href="{% url "fixitMain:about-us" %}">About</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:FAQs" %}">Faq<span class="small">s</span></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:contact-us" %}" >Contact</a>
+                    </li>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="footer-col col-md-3">
+                            <div class="footer-list">
+                                <h5>For customers</h5>
+                                <li>
+                                    <a href="{% url "fixitMain:FAQs" %}">
+                                        How it works
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitMain:TandC" %}">
+                                        Terms &amp; Conditions
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'fixitCustomers:register-customer' source='new' ref=1 %}">
+                                        Create Account
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitMain:postjob" category="new" %}" >
+                                        Find a Tradesman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a  href="{% url "fixitCustomers:my-account" %}">
+                                        My Account
+                                    </a>
+                                </li>
+                                <!-- <li>
+                                    <a href="">
+                                        Register as a Tradesman
+                                    </a>
+                                </li> -->
+                            </div>
+                        </div>
+
+                        <div class="footer-col col-md-3">
+                            <div class="footer-list">
+                                <h5>For Tradesmen</h5>
+
+                                <li>
+                                    <a href="{% url "fixitTradesmen:how-it-works" %}">
+                                        How it works
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitTradesmen:pricing" %}">
+                                        Pricing
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitTradesmen:verify-tradesman" %}">
+                                       Get Verified
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitMain:all-jobs" %}">
+                                        Search Jobs
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitTradesmen:register-tradesman" source="new" %}">
+                                       Register as a Specialist
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "fixitTradesmen:tradesman-account" %}">
+                                       My Account
+                                    </a>
+                                </li>
+                            </div>
+                        </div>
+
+                        <div class="footer-col col-md-3">
+                            <div class="footer-list">
+                            <h5>Connect with us</h5>
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="#" class="btn-social btn-outline">
+                                            <i class="fa fa-fw fa-facebook">
+                                                <img src ="{% static 'fixit/img/socials/facebook-social.png' %}" alt="facebook-ndoozi"  title="like us on facebook"/>
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn-social btn-outline">
+                                            <i class="fa fa-fw fa-google-plus">
+                                                <img src ="{% static 'fixit/img/socials/google-social.png' %}" alt="google-plus-ndoozi" title="join our circle on g+"/>
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn-social btn-outline">
+                                            <i class="fa fa-fw fa-twitter">
+                                                <img src ="{% static 'fixit/img/socials/twitter-social.png' %}" alt="google-plus-ndoozi"  title="follow us on twitter"/>
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn-social btn-outline">
+                                            <i class="fa fa-fw fa-linkedin">
+                                                <img src ="{% static 'fixit/img/socials/youtube-social.png' %}" alt="google-plus-ndoozi" title="watch us on youtube" />
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <br/>
+
+                                    <span>
+                                        <span class="glyphicon glyphicon-envelope"></span>
+                                        <strong class="text-info">Send Us a Mail.</strong>
+                                        <br/>
+                                        <span>
+                                            info@ndoozi.com
+                                        <br/>
+                                            help@ndoozi.com
+                                        </span>
+                                    </span>
+
+                                        <br/><br/>
+                                    <span>
+                                        <span class="pull-left">
+                                            <span class="glyphicon glyphicon-earphone"></span>
+                                            <strong class="text-info">Need help.? Call.</strong>
+                                        </span>
+                                        <br/>
+                                    +234 8063398502 <br/>
+                                    +234 8093459217
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; ndoozi.com &nbsp;
+                        <script>
+                            var d = new Date();
+                            document.write(d.getFullYear());
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>

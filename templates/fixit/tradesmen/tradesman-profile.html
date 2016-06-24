@@ -1,0 +1,185 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+
+{% block header %} 
+    <div class="row">
+        <div class="col-lg-12 pull-right">
+            <span class="pull-right">
+                {% block find-tradesman %}
+                <a class="btn btn-xs btn-white" href="{% url "fixitMain:postjob" category=userinfo.category|slugify %}"><h4> &nbsp; &nbsp; Post Similar Job &nbsp; &nbsp; </h4></a>
+                
+                {% endblock find-tradesman %}
+            </span>
+        </div> 
+    </div>
+
+{% endblock header %}
+
+		{% block breadcrumb %}
+			<li>
+				<a href="{% url "fixitMain:index" %}">Home</a>
+			</li>
+		    <li>
+		    	<a href="{% url 'fixitMain:cat_details' %}"> {{ userinfo.category|capfirst }}</a>
+
+
+		    </li>
+		    <!-- <li>
+				put job title here
+			</li> -->
+		    <li>{{ userinfo.company_name|title}} </li>
+		{% endblock breadcrumb %}
+
+		{% block portfolio %} 
+			
+			<div class="padding-lg-sides no-pad-top">
+				<h3> {{ userinfo.company_name }}</h3>
+				<span><strong> Listed In</strong>: {{ userinfo.category }} - {{ userinfo.sub_category }}</span>
+			</div>
+		    
+		{% endblock portfolio %}
+
+		{% block about %}
+		<div class="padding-lg-sides">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel">
+						<div class="panel-heading bg-primary">
+							<strong>Member since &nbsp; {{ userinfo.user.date_joined|date:'Y' }}</strong>
+							<strong class="pull-right">
+								<span class="{{ userinfo.verification_code }}">{{userinfo.verification_code}}</span>
+							</strong>
+						</div>
+
+						<div class="panel-body text-justify">
+							<span class="profile-logo">
+								<a href="#">
+									<img src="{{ userinfo.company_logo.url }}" alt="{{userinfo.company_name}}" title="{{ userinfo.company_name }} Logo" />
+								</a>
+							</span>
+							{{ userinfo.sales_pitch|capfirst }}
+						</div>
+						<p class="category-header"> Customer Reviews</p>
+						<!-- throw this fr each review -->
+						
+							{% for review in reviews %}
+								<div class="panel panel-info" role="customer reviews">
+									<div class="panel-body">
+										<small>
+											<span style="padding-left: 15px">
+												{{ review.review|capfirst }}
+											</span>
+										</small><br/>
+										<span class="pull-right">
+											<a href= "/{{ review.job_category.title_slug }}/{{ review.job_id }}/{{ review.title_slug }}">
+											<i class="text-info">{{ review.postedby.customer.get_full_name }}</i>
+											</a>
+										</span>
+									</div>
+								</div>
+							{% endfor %}
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="panel">
+						<div class="panel-heading bg-primary">
+							<strong>Rating </strong>
+						</div>
+						<div class="panel-body">
+							{% for key, value in display_rating.items %}
+								<script>
+									for (var stars=0; stars <  {{ key }}; stars++){
+									document.write("<span class='glyphicon glyphicon-star'></span>");
+								}
+								for (var empty=0; empty < 5 - {{ key }}; empty++){
+									document.write("<span class='glyphicon glyphicon-star-empty'></span>");
+								}
+								document.write("<small><span class='text-gray pull-right'> {{ value }} </span></small> <br/>");
+								</script>
+							{% endfor %}
+							
+							<br/>
+							<strong>Jobs Executed: </strong><span class="pull-right"> {{ userinfo.jobs_count }}</span>
+						</div>
+
+					</div>
+
+
+					<div class="panel">
+						<div class="panel-heading bg-primary">
+							<strong>Company Information </strong>
+						</div>
+						<div class="panel-body">
+							<strong> Contact: </strong><span class="pull-right"> {{ userinfo.user.first_name}} {{ userinfo.user.last_name }}</span><br/>
+							<strong> City: </strong><span class="pull-right"> {{ userinfo.city|capfirst }} </span><br/>
+							<strong> Phone: </strong><span class="pull-right"> Call to get number </span><br/>
+							<strong> Email: </strong><a href= "mailto:{{ userinfo.tradesman.email}}" title="send email to {{ bizinfo.company_name }}" class="pull-right">Send email to this contact</a><br/>
+						</div>
+					</div>
+
+					<div class="panel">
+						<div class="panel-heading bg-primary">
+							<strong>Location </strong>
+						</div>
+						<div class="panel-body">
+							<span id = "route_map"> map here </span>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>  
+		{% endblock about %}
+	
+
+
+{% block contact %} 
+<div class="padding-lg-sides">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel">
+				<div class="panel-heading bg-primary">
+					<strong>Verification colour code </strong>
+				</div>
+
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-3">
+							<strong>
+								Gold
+								<span class="gold"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</span>
+							</strong>
+						</div>
+
+						<div class="col-lg-3">
+							<strong >
+								Silver
+								<span class="silver"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</span>
+							</strong>
+						</div>
+
+						<div class="col-lg-3">
+							<strong >
+								Bronze
+								<span class="bronze"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</span>
+							</strong>
+						</div>
+
+						<div class="col-lg-3">
+							<strong >
+								Unverified
+								<span class="unverified"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</span>
+							</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contact %}
+
+

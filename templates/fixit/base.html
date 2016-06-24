@@ -1,0 +1,112 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}Ndoozi.com - Connecting customers and tradesmen{% endblock title %} </title>
+    <link href="{% static "fixit/css/bootstrap.min.css" %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static "fixit/css/freelancer.css" %}" rel="stylesheet">
+    <link href="{% static "fixit/css/fixit.css" %}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    
+    <!-- jQuery -->
+    <script src="{% static "fixit/js/jquery.js" %}"></script>
+</head>
+
+
+<body id="page-top" class="index">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        {% block navbar %}
+        {% include "fixit/partials/navbar.html" %}
+        {% endblock navbar %}
+    </nav>
+
+
+    <!-- Header -->
+    <header>  
+        <div class="container">
+            {% block header %}
+            
+            {% endblock header %}
+        </div>
+    </header>
+
+    
+<div class="pad-body-sides">
+   
+<section id="advertorial" style="padding: 0px;">
+    <div class="padding-lg-sides">
+        <div class="row">
+            <div class="breadcrumb">
+               <!-- <span>You are here:  </span> -->
+                {% block breadcrumb %}{% endblock breadcrumb %}
+            </div>
+        </div>
+    </div>
+        {% block portfolio %}{% endblock portfolio %}
+</section>
+
+    <!-- About Section -->
+    {% block about %}
+    <section id="joblist-category">
+    
+    </section>
+    {% endblock about %}
+
+    <!-- Contact Section -->
+    <section id="">
+       {% block contact %}{% endblock contact %}
+    </section>
+
+</div> <!-- whole body padding ends -->
+    <!-- Footer -->
+    <footer class="text-left">
+         {% block footer %}
+            {% include "fixit/partials/footer.html" %}
+         {% endblock footer %}
+    </footer>
+
+
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll visible-xs visible-sm">
+        <a class="btn btn-primary border-rounded-thick" href="#page-top">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+        </a>
+    </div>
+
+
+    <!-- Portfolio Modals -->
+    {% include "fixit/partials/portfolio-modals.html" %}
+
+    
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static "fixit/js/bootstrap.min.js" %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="{% static "fixit/js/classie.js" %}"></script>
+    <script src="{% static "fixit/js/cbpAnimatedHeader.js" %}"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="{% static "fixit/js/jqBootstrapValidation.js" %}"></script>
+    <script src="{% static "fixit/js/contact_me.js" %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static "fixit/js/freelancer.js" %}"></script>
+
+</body>
+
+</html>

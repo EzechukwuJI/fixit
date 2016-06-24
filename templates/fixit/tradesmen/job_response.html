@@ -1,0 +1,142 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+
+{% block header %} 
+// <script>
+// 	$(document).ready(function(){
+// 		alert('hurray')
+// 	})
+// </script>
+
+    <div class="row">
+        <div class="col-lg-12 pull-right">
+            <span class="pull-right">
+                {% block find-tradesman %}
+                <h5 class="btn btn-xs btn-white">Post your response to this job </h5>
+                {% endblock find-tradesman %}
+            </span>
+        </div> 
+    </div>
+
+{% endblock header %}
+{% block title %} Respond to job {% endblock title %}
+
+{% block breadcrumb %}
+<!-- <div class="padding-sm-sides"> -->
+    <li><a href="{% url "fixitMain:index" %}">Home</a></li>
+    <li><a href=" ">{{ job.job_category.category_title }} </a></li>
+    <li><a href=" ">{{ job.job_title }} </a></li>
+    <li>Response </li>
+{% endblock breadcrumb %}
+
+{% block portfolio %} 
+	
+	
+		<div class="padding-sm-sides">
+			<div class="padding-sm-sides">
+				<div class="row text-left">
+					<div class="col-lg-8">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong>
+									Job Response form
+								</strong>
+							</div>
+							{% if responded %}
+								<div class="panel-body">
+									<tr> 
+										<td>You have responded to this job. Find jobs closer to you using our zone search below.
+											<div class="panel-body">
+												<!-- put any marketting text here -->
+											</div>
+											
+										</td> 
+									</tr>
+								</div>
+							{% else %}
+								<form action ="{% url 'fixitTradesmen:save-response' %}" method = "post" enctype="multipart/form-data" onsubmit="alert(form.formfields)">
+									<div class="panel-body ">
+										{% csrf_token %}
+										<table class="table-responsive">
+											
+												<input type="hidden" name="job_id" value = '{{ job.job_id }}' />
+												<input type="hidden" name="job_title" value = '{{ job.title_slug }}' />
+												<input type="hidden" name="responder" value = '{{ user.email }}' />
+												
+												<tr>
+													<td><strong> {{ form.response_note.label }}</strong> </td>
+													<td > {{ form.response_note }} </td>
+												</tr>
+												<tr>
+													<td> <strong> I will do this job for (&#8358;) : </strong> </td>
+													<td > {{ form.quoted_amount }} </td>
+												</tr>
+												<tr>
+													<td> <strong>Estimated cost of materials (&#8358;)</strong> <small class="text-danger"> (optional) </small> </td>
+													<td > {{ form.supply_estimate }} </td>
+												</tr>
+
+												<tr>
+													<td><strong>List of materials needed</strong><small class="text-danger"> (optional) <br/> seperate each item with a comma</small> </td>
+													<td > {{ form.supply_list }} </td>
+												</tr>
+											
+										</table>
+									</div>
+									
+									<div class="panel-footer bg-lemon">
+										<button name="submit" class="btn btn-lemon" ><h4>Submit Response</h4></button>
+										
+										<!-- <button type="submit" name="submit" class="btn btn-lemon" onclick='this.form.submit()'><h5>Submit Response</h5></button> -->
+									</div>
+
+								</form>
+								{% endif %}
+						</div>
+					</div>
+
+					<!-- RIGHT PANEL -->
+					<div class="col-lg-4">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong>Tips </strong>
+							</div>
+							<div class="panel-body">
+								tips here
+							</div>
+							
+						</div>
+						<div class=" panel panel-primary">
+							<div class="panel-heading">
+								<strong> Share This Job </strong>
+							</div>
+							
+							<div class="panel-body">
+								{% include 'fixit/partials/send_to_friend.html' %}
+							</div>
+						</div>
+					</div>
+				</div>
+					<!-- Other categories ends here -->
+			</div>
+		</div>
+    
+{% endblock portfolio %}
+
+{% block about %}
+	<div class="padding-lg-sides">
+		<div class="row">
+			
+		</div>
+	</div>
+    
+{% endblock about %}
+
+{% block contact %} 
+	{% include 'fixit/partials/jobzone_list.html' %} 
+{% endblock contact %}
+
+
+
+

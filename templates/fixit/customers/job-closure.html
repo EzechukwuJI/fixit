@@ -1,0 +1,149 @@
+{% extends 'fixit/customers/base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+	<script>
+		$(document).ready(function(){
+			$('.status_option').click(function(){
+				var selected = this.value
+				if (selected == 'is_executed')
+				{
+					$('#ratingform').show()
+					$('#close_job').hide()
+				} else {
+					$('#ratingform').hide()
+					$('#close_job').show()
+				}		
+			})
+		})
+
+	</script>
+
+
+<script>
+
+	var metrics = [["Reliability","reliability"], ["Price vs quality of work","pricing"],["Flexibility, customer relationship and loyalty","loyalty"],["Craftmanship and dedication","craftmanship"],["Sharing of ideas and friendliness","relationship"],["Working within budget","within_budget"],["Finished within time frame","timely"]]
+
+	function showRatingOptions(){
+		for (var i in metrics){
+			counter = i;
+			document.write("<strong>" + metrics[i][0] + "<strong><br/> &nbsp; &nbsp;")
+			for (var rate = 1; rate < 6; rate++){
+				document.write("<label>" + rate + "</label> <input type='radio' value= '" + rate + "'name='" + metrics[i][1] + "' class='radio-inline form-inline form-control' style='margin-right: 8px; display:inline;'>");
+			}
+			document.write("<br/><br/>")
+			// document.write(navigator.userAgent)
+		}
+}
+
+</script>
+{% endblock header %}
+
+
+{% block portfolio %}
+<div class="padding-sm-sides">
+	<div class="row">
+	 	<div class="col-lg-12">
+	 		<div class="panel">
+		 		<div class="dashboard-nav">
+		 			<div class="dashboard-nav-inline">
+			 			<ul>
+			 				<li>
+		                        <a  href="{% url "fixitCustomers:my-jobs" %}">My Jobs</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Account</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Wallet</a>
+		                    </li>
+			 			</ul>
+
+			 		</div>
+			 	</div>
+
+
+	 			<div class="panel-body" style="padding-left: 0px; padding-right: 0px;">
+	 				<div class="category-header">{{ job_title|title }} </div><br/>
+	 				<div id="options" class="bg-primary">
+	 					<strong style="padding: 5px;"> Was the job Executed?</strong><br/>
+	 					<span style="padding: 5px;">
+		 					<input type ="radio" name="action_status" value="is_executed" id="yes" class="status_option option-inline form-control" checked="true"/>
+		 					<label for="yes">Yes</label> &nbsp;
+		 					<input type ="radio" name="action_status" value="not_executed" id="no" class="status_option option-inline form-control"/>
+		 					<label for="no">No</label>
+		 				</span>
+	 				</div>
+
+	 				<div class="ratingform" role="rate tradesman" id="ratingform">
+	 					<form action="{% url 'fixitCustomers:close-job' job_id %}" method="post">
+	 						{% csrf_token %}
+	 						<fieldset style="width:75%; padding:15px;">
+	 							<div class="row" style="width: 400px;" >
+		 							<!-- <label for="price"> Cost of job completed &nbsp;<span class="text-danger">*</span>
+		 							</label>
+		 								<input type="text" class="form-control pull-right" name="final_cost" id="price"/> -->
+
+
+
+
+		 								<!-- <br/> -->
+		 								<!-- <small class="text-danger">(For internal record purposes only.) </small><br/><br/> -->
+		 								<label for="tradesman"> Job Executed by: 
+		 									<!-- <span class="text-danger">*</span> -->
+		 							</label> &nbsp; &nbsp; &nbsp; 	
+		 							<input type="text" class="form-control pull-right" name="tradesman" id="tradesman" value= {{ tradesman }}  readonly/><br/><br/>
+
+		 							<label for="tradesman"> Comments &nbsp;<span class="text-danger">*</span></label><br/>
+		 							<large> Write a brief review about your experience with this tradesman </large>
+		 							(<small class="text-danger">300 characters </small>)
+		 							&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+		 							<textarea name="customer_comments" id="comments" class="form-control pull-right" style="width: 100%; height: 130px" maxlength = 300 ></textarea><br/><br/>
+	 							</div>
+
+	 							<div class="category-header">Rate This Tradesman <span class="text-danger">*</span></div>
+	 							
+	 							<div class="border-rounded-thin bg-white row" style="padding: 10px 0px 10px 0px; width: 400px;">
+	 								<div class="rating">
+	 									<ol>
+	 										<script>
+	 											showRatingOptions()
+	 										</script>
+	 									</ol>
+	 								</div>
+	 							</div>
+	 							
+	 							{% if no_tradesman %}
+		 							<script>
+		 								var confirm = confirm("This job has not been executed, Are you sure you want to close it?");
+										if  (confirm === true){
+											$('#no').attr('checked', true);
+											$('#close_job').show();
+											$('#close_job').css('display','block');
+											$('#ratingform').hide();
+											$('#yes').attr('checked', false);
+										}
+		 							</script>
+	 								
+	 								<button type="submit" class="btn-xl btn-lemon pull-right" id = "rate_n_close" value="Close project" onclick = 'this.form.submit()' disabled>
+	 								<h6>Rate &amp; Close Project</h6>
+	 								</button>
+	 							{% else %}
+	 								<button type="submit" class="btn-xl btn-lemon pull-right" id = "rate_n_close" value="Close project" onclick = 'this.form.submit()' >
+	 								<h6>Rate &amp; Close Project</h6>
+	 								</button>
+	 							{% endif %}
+
+ 							<br/><br/><br/>
+	 						</fieldset>
+	 					</form>
+	 				</div>
+
+	 				<a href="{% url 'fixitCustomers:close-job' job_id %}" class="btn-xl btn-lemon pull-right" id ="close_job" style="display: none;"><h6>Close Project</h6></a>
+	 			</div>
+
+	 		</div>
+	 	</div>
+	</div>
+</div>
+{% endblock portfolio %}

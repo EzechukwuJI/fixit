@@ -1,0 +1,162 @@
+{% extends "fixit/base.html" %}
+{% load staticfiles %}
+{% block title %} All Jobs{% endblock title %}
+
+{% block header %}
+	<script>
+		$(document).ready(function(){
+			$('[data-toggle="popover"]').popover({
+				html: "true",
+				placement: "top",
+				trigger: "focus"
+			});
+
+
+		});
+	</script>
+{% endblock header %}
+
+
+{% block breadcrumb %}
+<!-- <div class="padding-sm-sides"> -->
+	    <li><a href="">All Jobs</a></li>
+	    <li></li>
+	<!-- </div> -->
+{% endblock breadcrumb %}
+
+{% block portfolio %}
+<div class="row padding-lg-sides">
+	<div class="col-lg-12">
+		<h3 class="text-left">All Jobs </h2>
+		<!-- <div class="padding-sm-sides"> -->
+			<div class="row" role="select province">
+				<div class="col-sm-12 pull-left">
+					<form action ="{% url 'fixitMain:cat_details' %}" method="get" id="cat_form">
+						
+                        <select name="category" id = "select-category" class="btn btn-option btn-xl" onchange='this.form.submit()'>
+                            {% for category in categories %}
+                            <option name="" value="empty" selected  style="display: none;" disabled="true">Search by Categories</option>
+                                <option name="job_category" value="{{ category.title_slug }}" id="cat_{{ category.id }}"> {{ category.category_title|title }} </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+				</div>
+			</div>
+
+			<p> &nbsp; </p>
+			<!-- <div class="padding-sm-sides"> -->
+			<div class="row border-rounded-thin bg-primary" role="how it works">
+				<div class="col-lg-8">
+						{% include 'fixit/partials/how-it-works.html' %}
+				</div>
+				<div class="col-lg-4">
+					<div class="pull-right">
+						<a class="btn btn-xs btn-white" href="{% url "fixitMain:postjob" category="new" %}">
+							<h3>post a job</h3>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- </div> -->
+
+	</div>
+</div>
+<p> &nbsp; </p>
+			{% endblock portfolio %}
+
+			{% block about %}
+		<div class="padding-lg-sides">
+			<div class="row" role="all jobs table">
+				{% if jobs %}
+				<table class="table table-striped table-hover table-bordered">
+					<caption class="text-danger"> To submit a quote for any of the jobs listed use the <strong>Respond</strong> button</caption>
+					<thead class="bg-primary">
+						<th>Image</th>
+						<th>Title</th>
+						<th>Responses</th>
+						<th>Status</th>
+						<th>City</th>
+						<th>Date posted</th>
+						<!-- <th>Category</th> -->
+						<th>Action</th>
+					</thead>
+					<tbody>
+						{% for job in jobs %}
+						<tr valign="center">
+							{% for file in uploads %}
+								
+								{% if file.job_id = job.job_id %}
+									<td>
+										<a href = "{% url 'fixitMain:job_details' job.job_category.title_slug job.job_id job.title_slug %}">
+											<img class="logo" src="{{file.picture.url}}"  alt="{{job.job_title}}"/>
+										</a>
+									</td>
+								{% endif %}
+								
+							{% endfor %}
+
+							<td class="joblink" valign="center"> <a href = "{% url 'fixitMain:job_details' job.job_category.title_slug job.job_id job.title_slug %}" style="text-decoration:none;"><strong> {{job.job_title|capfirst }}</strong></a>
+								{% if not job.status == 'Open' %}
+									<small class="text-danger"> &nbsp; This job is {{job.status }} </small>
+								{% endif %}
+							</td>
+							<td> {{ job.num_response }}</td>
+							<td> {{ job.status|capfirst }}</td>
+							<td> {{ job.location|capfirst }}</td>
+							<td> {{ job.date_posted|date }}</td>
+							<td class="pull-right">
+								{% if job.status == 'Open' %}
+									<!-- When user is logged in -->
+										{% if user.is_authenticated %}
+											{% for group in user.groups.all %}
+												{% if not group.name = 'Tradesmen' %}
+													<a href="{% url 'fixitTradesmen:respond_to_job' job.job_id job.title_slug "bid" %}" id = {{ job.job_id}} 
+													class="btn btn-danger"  data-toggle="popover" title="Attention!" data-content="You do no have the permission to respond to jobs. Click <a href='{% url "fixitTradesmen:register-tradesman" source="response" %}'>here</a> to log in with your <i class = 'text-danger'>service provider</i> details or register as a service provider" onclick='return false;'>Respond</a>
+												{% else %}
+													<a href="{% url 'fixitTradesmen:respond_to_job' job.job_id job.title_slug "bid" %}" class="btn btn-danger" >Respond</a>
+												{% endif %}
+											{% endfor %}
+										{% else %}
+										<!-- when user not logged in -->
+											<a href="{% url 'fixitTradesmen:respond_to_job' job.job_id job.title_slug "bid" %}" class="btn btn-danger" >Respond</a>
+										{% endif %}
+								{% else %}
+									<span class="text-center">Closed</span>
+								{% endif %}
+
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% endif %}
+				<div class="pagination text-center">
+					<!-- <span class="step-links"> -->
+						{% if jobs.has_previous %}
+							<span class="btn btn-sm btn-primary">
+								<a href="?page={{ jobs.previous_page_number}}"> Previous</a> 
+							</span>
+						{% endif %}
+
+						<span class="current">
+				            Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}.
+				        </span>
+
+				        {% if jobs.has_next %}
+					        <span class="btn btn-sm btn-primary">
+					            <a href="?page={{ jobs.next_page_number }}">next</a>
+					        {% endif %}
+					    	</span>
+					<!-- </span> -->
+
+
+					
+				</div>
+			</div>
+		</div>
+
+{% endblock about %}
+
+{% block contact %}
+	{% include 'fixit/partials/jobzone_list.html' %}
+{% endblock contact %}

@@ -1,0 +1,173 @@
+<script>
+	$('body').on('change', '#stateinput', function(){
+		var state      = $('#stateinput').find(':selected').attr('value');
+		var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+		function csrfSafeMethod(method){
+			// these HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings){
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain){
+					xhr.setRequestHeader("X-CSRFToken", csrf_token);
+				}
+			}
+		});
+		$.ajax({
+			url: "{% url 'fixitMain:createjob' %}",
+			type: "POST",
+			data: {selected_state: state, csrfmiddlewaretoken: csrf_token, fieldname: "state" },
+			success: function(data){
+				$('#areainput').html(data);
+				$('#areainput').prop('readonly',false);
+			},
+			error: function(data){
+				$('#areainput').html('<option value="nothing">error occured </option>');	
+			}
+		})
+}) 
+
+var country_states =  [
+	['Nigeria', ['Abia','Adamawa','Akwa-Ibom','Anambra','Bauchi','Benue','Borno',
+	    'Cross-River','Delta','Edo','Enugu','Lagos', 'Katsina']],
+	    ['Ghana',['accra','kumasi']] 
+	]
+
+$('body').on('change', '#countryinput', function(){
+	var states = "";
+	var selected_country = $('#countryinput').find(':selected').attr('value');
+	for (var country in country_states ){
+		if (country_states[country][0] === selected_country ){
+			states = country_states[country][1];
+		}
+	}
+	$('#stateinput').html("");
+	for (var state in states ){
+		$('#stateinput').append('<option value=' + states[state] + '>' + states[state] + '</option>');
+	}
+})
+</script>
+<div class="panel-body">
+	<div class="row">
+		<!-- Left column -->
+		<div class="col-lg-6">
+			{% if new_user %}
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">Your Email</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "text" value="{{email}}" class="form-control formtext" disabled/>
+					</div>
+				</div>
+				<input type = "hidden" value="{{email}}" name="email"  id ="emailinput" class="form-control formtext" />
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">First Name</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "text" value="{{fname|title }}" class="form-control formtext" disabled />
+					</div>
+				</div>
+
+					<input type = "hidden" value="{{fname|title }}" name="fname"  id ="fnameinput" class="form-control formtext" />
+					<br/>
+			{% elif tradesman %}
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">Current Email</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "text" value="{{email}}" name="email"  id ="emailinput" class="form-control formtext"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">First Name</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "text" value="{{fname|title }}" class="form-control formtext" disabled/>
+					</div>
+				</div>
+				<input type = "hidden" value="{{fname|title }}" name="fname"  id ="fnameinput" class="form-control formtext" />
+			{% else %}
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">Email</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "email" name="email"  id ="emailinput" class="form-control formtext" required />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<label for="text" class="text-normal">First Name</label>
+					</div>
+					<div class="col-md-9">
+						<input type = "text" name="fname"  id ="fnameinput" class="form-control formtext" required/>
+					</div>
+				</div>
+			{% endif %}
+				<div class="row">
+					<div class="col-md-3">
+						<label for="addressinput" class="text-normal">Address</label>
+					</div>
+					<div class="col-md-9"> 
+						<textarea name="address"  id ="addressinput" class="formtext"  cols = "25" rows = "3" Placeholder = "Enter your contact address" maxlength = "300" class="form-control formtext " required></textarea>
+					</div>
+				</div>
+			<!-- <br/><br/> -->
+		</div>
+		<!--  right column  -->
+		<div class="col-lg-6">
+			<div class="row">
+				<div class="col-md-3">
+					<label for="phoneinput" class="text-normal " >Phone</label>
+				</div>
+				<div class="col-md-9">
+					<input type = "number" name="phone_number"  id ="phoneinput" class="form-control formtext " max_length="11" required/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<label for="areainput" class="text-normal"> Country</label>
+				</div>
+				<div class="col-md-9">
+					<select name="country" id="countryinput" class="form-control formtext" required>
+						<script>
+							for (var country in country_states ){
+								document.write('<option value=' + country_states[country][0]+'>' + country_states[country][0] + '</option>')}
+						</script>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<label for="stateinput" class="text-normal" >State</label>
+				</div>
+				<div class="col-md-9">
+					<select name="state" id="stateinput" class="form-control formtext" required >
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<label for="areainput" class="text-normal"> Area</label>
+				</div>
+				<div class="col-md-9">
+					<select name="area" id="areainput" class="form-control formtext" required>
+						<option selected disabled >Select </option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+			<input type="checkbox" name="accept_TandC"  required />
+			<!-- </div> -->
+			<!-- <div class="col-md-7"> -->
+					By submitting this form, you agree to our <a href="{% url 'fixitMain:TandC' %}">Terms &amp; Conditions </a>.
+			</div>
+		</div>
+	</div>
+</div>

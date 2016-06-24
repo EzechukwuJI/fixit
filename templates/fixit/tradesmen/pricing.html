@@ -1,0 +1,55 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+
+{% block header %} 
+    <div class="row">
+        <div class="col-lg-12 pull-right">
+            <span class="pull-right">
+                {% block find-tradesman %}
+                <h5 class="btn btn-xs btn-white">Pricing </h5>
+                {% endblock find-tradesman %}
+            </span>
+        </div> 
+    </div>
+
+{% endblock header %}
+{% block title %} - Job Response {% endblock title %}
+
+{% block breadcrumb %}
+<!-- <div class="padding-sm-sides"> -->
+	    <li><a href="{% url "fixitMain:index" %}">Home</a></li>
+
+	    <li><a href=" "> here</a></li>
+
+	    <li> here </li>
+	<!-- </div> -->
+{% endblock breadcrumb %}
+
+{% block portfolio %} 
+	
+
+
+</div>
+    
+{% endblock portfolio %}
+
+{% block about %}
+	<div class="padding-lg-sides">
+		<div class="row">
+			
+		</div>
+	</div>
+    
+{% endblock about %}
+
+{% block contact %}     
+{% endblock contact %}
+
+
+
+
+
+
+
+

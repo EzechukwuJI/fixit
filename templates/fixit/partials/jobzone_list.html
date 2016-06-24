@@ -1,0 +1,18 @@
+<!-- <div class="padding-sm-sides"> -->
+		<div class="padding-sm-sides">
+			<div class="row" role="select province">
+				<ul class="pull-left zone-list">
+					<span class="category-header text-primary">Find Jobs by Zones </span>
+					<br/>
+					<small class="text-primary"> Move your mouse over any zone to see the areas covered </small>
+					 <br/>
+					 {% for zone in zones %}
+
+						<li>
+							<a href="{% url 'fixitMain:job_by_zones' category="jobs" state=zone.state.state zone_id=zone.code zone=zone.name|slugify %}" id="{{zone.code}}"> {{ zone.name|title }} </a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	<!-- </div> -->

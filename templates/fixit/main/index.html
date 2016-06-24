@@ -1,0 +1,223 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+
+{% block header %}
+<script>
+$(document).ready(function() {
+
+    $('#cat_form').submit(function(){
+       var  $this = $('#select-category');
+        var selected = $this.find(":selected").text();
+        if (selected === 'Search Job by categories'){
+            $this.css('border-color','red');
+            return false;
+        }    
+    });
+})  // ends on ready function
+
+</script>
+    <div class="pad-body-sides">
+        <div class="row">
+                <div class="row ">
+                    <!-- <div class="col-lg-12 pull-right">
+                        <span class="pull-right">
+                            {% block find-tradesman %}
+                            <a class="btn btn-xs btn-white " href="{% url "fixitMain:postjob" category="new" %}"><h5>Post a project </h5></a>
+                            <a href="{% url 'fixitTradesmen:register-tradesman' source="new" %}" class="btn btn-xs btn-lemon"><h5>REGISTER AS A SPECIALIST</h5></a>
+                            {% endblock find-tradesman %}
+                        </span>
+                    </div>  -->
+                </div>
+                <div class="col-lg-5" role="ad banner">
+                    <div class=" ad-banner">
+                        <a href="{% url "fixitMain:index" %}">
+                            <img src="{% static "fixit/img/brand-logo.png" %}" alt="ndoozi.com-logo" />
+                        </a>
+                        <a href="{% url "fixitMain:postjob" category="new" %}" class="btn btn-xs btn-white">
+                            <h4 class="text-center">post your project <br/>it's free</h4>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-7" role = "How it works panel">
+                    <div class="panel">
+                        <div class="panel-body light-dark">
+                            <span class="text-left">
+                                {% include 'fixit/partials/how-it-works.html' %}
+                            </span>
+                        </div>
+                        
+                        <!-- <div class="col-lg-12"> -->
+                            <div class="panel-footer bg-lemon  ">
+                                <form action ="{% url 'fixitMain:cat_details' %}" method="get" id="cat_form">
+                                    <span>
+                                        <!-- <div class="col-lg-9"> -->
+                                            <select name="category" id = "select-category" class=" btn-option-lg sel-text-lg" >
+                                                {% for category in all_categories %}
+                                                <option name="" value="empty" selected  style="display: none;" disabled="true">Find Jobs by categories Here</option>
+                                                    <option name="job_category" value="{{ category.title_slug }}" id="cat_{{ category.id }}"> {{ category.category_title|title }} </option>
+                                                {% endfor %}
+                                            </select>
+                                        <!-- </div> -->
+                                        <!-- <div class="col-lg-3"> -->
+                                            <button class="btn btn-lemon"><h6> Search </h6></button>
+                                        <!-- </div> -->
+                                    </span>
+                                </form>
+                            </div>
+                        <!-- </div> -->
+                    <br/>
+
+                    <div class="row ">
+                    <!-- <div class="col-lg-12" style="padding: 0px;"> -->
+                        <span>
+                            <div class="col-lg-6">
+                                <a class="btn btn-xs btn-white" href="{% url "fixitMain:postjob" category="new" %}" style="width:100%;" ><h5>Post a project </h5></a>
+                            </div>
+                            <div class="col-lg-6">
+                                <a href="{% url 'fixitTradesmen:register-tradesman' source="new" %}" class="btn btn-xs btn-lemon" style="width:100%;"><h5>REGISTER AS A SPECIALIST</h5></a>
+                            </div>
+                            
+                        </span>
+                    <!-- </div>  -->
+                </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock header %}
+
+{% block breadcrumb %}
+   <p> &nbsp; </p>
+{% endblock breadcrumb %}
+
+{% block portfolio %} 
+    
+    {% include "fixit/partials/portfolio.html" %}
+{% endblock portfolio %}
+
+{% block about %}
+<div class="text-center">
+<h3 class="text-center"> Post jobs from any of the categories listed below</h3>
+<strong class="text-center text-danger"> If you need help chosing a category for your job call our helpline: <phone>08063398502</phone></strong> 
+</div>
+<!-- <div> &nbsp; </div> -->
+<div class="padding-sm-sides">
+    <div class="padding-lg-sides">
+        <div class="row">
+            <div class="col-lg-6" role ="odd numbered category">
+                <div class="cat-list">
+                    <ul>
+                        
+                        {% for key, value in odd_list.items %}
+                            <li class="joblink"><a href="{% url "fixitMain:postjob" category=key %}"> {{ value|upper }}</a></li>
+                        {% endfor %}
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6" role ="even numbered category">
+                <div class="cat-list">
+                    <ul>
+                        {% for key, value in even_list.items %}
+                            <li class="joblink"><a href="{% url "fixitMain:postjob" category=key %}"> {{ value|upper }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock about %}
+
+
+
+{% block contact %}
+<div class="padding-lg-sides" role = "statistics">
+    <div class="padding-lg-sides">
+        <div class="row">
+            <span class="category-header">
+                Join The Train
+            </span>
+            <div class="panel">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="panel-body text-center">
+                            <div class="statistics">
+                               {{ num_customers }}
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center bg-primary">
+                            <strong>Happy Customers</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="panel-body text-center ">
+                            <div class="statistics">
+                                {{ num_tradesmen }}
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center bg-info">
+                            <strong>Verified Specialists</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="panel-body text-center">
+                            <div class="statistics">
+                                {{ num_categories }}
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center bg-danger">
+                            <strong>Job Categories</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="panel-body text-center">
+                            <div class="statistics">
+                                {{ num_jobs }}
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center bg-warning">
+                            <strong>Jobs Posted</strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <span class="category-header">Why Ndoozi?</span>
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <strong><dfn>
+                    Ndoozi.com helps you find verified and customer rated contractors for any of project under the listed categories (More to come). Saves you the time and energy spent searching for genuine contractors for that job of yours.</dfn></strong>
+                     <dfn><h6> free of charge </h6></dfn>
+                </div>
+                <div class="panel-footer text-right bg-lemon">
+                    <a class="btn btn-xs btn-white" href="{% url "fixitMain:postjob" category="new" %}"><h4> &nbsp; Post a project  &nbsp; </h4></a>
+                </div>
+            </div>
+
+
+
+             <dfn class="category-header">Happy customers comments</dfn>
+            <div class="panel">
+                <div class="panel-body">
+                    comments here
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contact %}

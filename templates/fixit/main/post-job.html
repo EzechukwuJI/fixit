@@ -1,0 +1,136 @@
+{% extends "fixit/base.html" %}
+{% load staticfiles %}
+{% block title %}
+	{% if new_user or tradesman %}
+		Create customer account 
+	{% else %}
+		Post a project 
+	{% endif %}
+{% endblock title %}
+{% block header %}
+
+
+
+<div class="row">
+	<div class="col-lg-6">
+    </div>
+    <div class="col-lg-6">
+    	<div class="row">
+    		<div class="col-lg-12 pull-left">
+    			<span class="btn btn-lemon">
+    				{% block top-header %}<h4> post your job it's free </h4>{% endblock top-header %}
+    			</span>
+
+    			{% block caption %}
+    				
+    			{% endblock caption %}
+    		</div>
+    	</div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block portfolio %}
+
+{% if project_saved %}
+<div class="padding-lg-sides">
+	<div class="panel panel-info">
+		<span class="category-header"> 
+			<span class="text-warning"><i>Congratulations! </i></span>
+				 your project  <span class="text-warning">{{ my_project.job_title|title }}</span>  is now on display on our website <br/>
+			<small class="text-center"> You'll receive an email for every response to this project.</small><br/>
+			<small class="text-normal">You can view your project  
+			<a href = "/{{my_project.job_category.title_slug}}/{{my_project.job_id}}/{{my_project.title_slug}}" >here</a>
+			</small>
+		</span>
+	</div>
+</div>
+
+{% endif %}
+
+<div class="padding-sm-sides">
+	<div class="">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="pad-top-lg">
+					{% block rightbar %}
+
+						<div class="panel panel-warning"  role = "job creation form">
+							<div class="panel panel-warning" role="category based caption">
+								<div class="panel-body">
+									<span class="category-header"> Post your project, <i>find competent contractors for free!</i>
+									</span>
+									<br/><br/>
+									{{ caption }}
+
+									
+									
+										{% if new_user %}
+											<span> Hello <strong>{{ fname|title }}</strong>, <br/> We noticed this is the first time you are submitting a project on ndoozi.com. To enable us serve you better, please fill out the form below. Thank you.
+											</span>
+										{% elif tradesman %}
+											<span> Hello <strong>{{ fname|title }}</strong>, <br/> You do not have a customer account yet and as such, you can not submit any project. You can instantly get a customer account for 
+												<i><strong>Free</strong></i> by completing the form below, using a different email address.
+											</span>
+										{% endif %}
+									
+
+								</div>
+							</div>
+
+							<form action ="{% url 'fixitMain:createjob' %}" method="post" enctype="multipart/form-data" onsubmit="alert(form.formfields)">
+								{% csrf_token %}
+
+									{% if new_user or tradesman %}
+										{% include 'fixit/partials/user_details.html' %}
+										<input type="hidden" name="sent_from" value="post_project" />
+										<div class="panel-footer bg-lemon pad-form">
+											<button name="submit" class="btn btn-lemon" onclick='this.form.action="{% url 'fixitCustomers:sign-up-customer' %}" '/>
+												<h4>Create Account</h4>
+											</button>
+										</div>
+
+									{% else %}
+										{% include 'fixit/partials/newprojectform.html' %}
+									
+										<div class="panel-footer bg-lemon">
+											<div class="row pad-form">
+												<button name="submit" class="btn btn-lemon pull-right" /><h4>Post Project</h4></button>
+											</div>
+										</div>
+									{% endif %}
+							</form>
+						</div>
+						
+					{% endblock rightbar %}
+				</div>
+			</div>
+			
+			{% block leftbar %}
+			
+			<!-- <div class="col-lg-3 pull-right">
+				<div class="panel panel-warning">
+					<div class="panel-heading">
+						Quick Q &amp; A for Specialists
+					</div>
+					<div class="panel-body">
+						Once the emulator finishes launching, select it in the list of running devices (see Figure
+						2-12), and Mono for Android will deploy your application to the emulator. This
+						can take a little while the first time, as it installs the debug runtime, but subsequent
+						deployments will be much faster. Once the application starts up, it should look like
+						Figure 2-13. Congratulations—you have just built your first Android application!
+					</div>
+				</div>
+			</div> -->
+			{% endblock leftbar %}
+		</div>
+	</div>
+</div>
+
+
+{% endblock portfolio %}
+
+
+
+
+

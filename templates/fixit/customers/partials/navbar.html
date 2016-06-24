@@ -1,0 +1,57 @@
+{% load staticfiles %}
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- <span class="glyphicon glyphicon-phone" role="phone"></span>
+                +<span>234(0)8063398502, &nbsp;</span>
+                <span class="glyphicon glyphicon-phone" role="phone"></span>
+                +<span>234(0)8063398502</span> -->
+                <a class="navbar-brand" href="{% url "fixitMain:index" %}">fixit.com</a>
+
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:index" %}">Home</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:all-jobs" %}">Jobs</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:contact-us" %}">Contact</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:about-us" %}">About</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:FAQs" %}">Faq<span class="small">s</span></a>
+                    </li>
+                    <!-- <li class="page-scroll">
+                        <a href="{% url "fixitMain:about-us" %}">Blog</a>
+                    </li> -->
+                    <li class="page-scroll">
+                        <a  href="{% url "fixitMain:logout" %}">Logout</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+
+            {% if user.is_authenticated %}
+                <div class="pull-right current-user text-primary" > 
+                    <span>
+                    current user: &nbsp; &nbsp; </span>
+                    <span > {{ user.first_name|title }} </span>
+                </div>
+            {% endif %}
+        </div>
+        <!-- /.container-fluid -->

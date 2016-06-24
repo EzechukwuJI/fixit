@@ -1,0 +1,271 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+{% block title %} Ndoozi - Register as a Tradesman {% endblock title %}
+{% block header %}
+{{ block.super }}
+
+<script>
+$('body').on('change', '#id_category', function(){
+	// alert("choice changed");
+		var post_data  = $('#id_category').find(':selected').attr('value');
+		var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+		function csrfSafeMethod(method){
+			// these HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings){
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain){
+					xhr.setRequestHeader("X-CSRFToken", csrf_token);
+				}
+			}
+		});
+			$.ajax({
+				url: "{% url 'fixitMain:createjob' %}",
+				type: "POST",
+				data: {category: post_data, csrfmiddlewaretoken: csrf_token, fieldname: "category" },
+				success: function(data){
+					console.log(data);
+					$('#id_sub_category').html(data);
+					$('#id_sub_category').prop('readonly', false);
+				},
+				error: function(data){
+					console.log('Nothing happened');
+					$('#id_sub_category').html('<option value="nothing">no sub_category found </option>');
+				}
+			})
+		}) 
+</script>
+<style>
+	.text-error{
+		color: red;
+	}
+	
+	.form-row {
+		padding: 0px;
+	}
+
+@media(max-width: 650px){
+	.form-row > span {
+		display: none;
+	}
+}
+@media(min-width: 650px;){
+	.form-helptext{
+		display: none;
+		}
+	}
+}
+	
+</style>
+{% endblock %}
+
+
+
+{% block portfolio %}
+	<div class = "padding-lg-sides padding-sm-sides">
+		{% if messages %}
+			{% for msg in messages %}
+				<blockquote class="text-{{msg.tags}} bg-white"> {{ msg }} </blockquote>
+			{% endfor %}
+		{% endif %}
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				TRADESMAN'S REGISTRATION FORM
+			</div>
+			<div class="panel-body panel-warning">
+				Sign up today and start making extra income with your skills. After we have verified your registration, you can bid for any number of jobs that matches your job category.
+			</div>
+
+			<div class="panel-body">
+				<form action = "{% url 'fixitTradesmen:register-tradesman' source="new" %}" method = "post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<fieldset style="padding: 15px 20px 10px 20px; box-shadow: -1px -1px -3px #000000;" class="bg-white">
+						<div class="row">
+							<div class="col-sm-6">
+
+								<div class="row">
+									<div class="col-md-12">
+										<h5 class="text-warning" > Personal Information </h5>
+									</div>
+								</div>
+
+								<!-- <div class="row">
+									<div class="col-md-4">
+										{{ biodataform.username.label }}
+									</div>
+									<div class="col-md-8">
+										{{ biodataform.username }}
+									</div>
+								</div> -->
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ biodataform.email.label }}
+									</div>
+									<div class="col-md-8">
+										{{ biodataform.email }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4">
+										{{ biodataform.first_name.label }}
+									</div>
+									<div class="col-md-8">
+										{{ biodataform.first_name }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4">
+										{{ biodataform.last_name.label }}
+									</div>
+									<div class="col-md-8">
+										{{ biodataform.last_name }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4">
+										upload image
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.passport }}
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="col-sm-6" >
+								<div class="row">
+									<h5 class="text-warning"> Business Information </h5>
+								</div>
+
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.company_name.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.company_name }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.category.label }}
+									</div>
+									<div class="col-md-8">
+										<select name="category" id ="id_category" class="btn-option-sm pull-right" >
+											<option value="Select Category" selected style="display:none">Select Category</option> 
+											{% for category in categories %}
+												<option value="{{category.title_slug }}" name="category" >{{category.category_title }}</option> 
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										Sub Category
+									</div>
+									<div class="col-md-8">
+										<select name="sub_category" id ="id_sub_category" class="btn-option-sm pull-right" >
+											<option value="" selected style="display:none">Select Sub Category</option> 
+										</select>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.sales_pitch.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.sales_pitch }}
+									</div>
+								</div>
+
+								<!-- <div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.address.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.address }}
+									</div>
+								</div> -->
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.phone_no.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.phone_no }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.address.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.address }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.country.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.country }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.state.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.state }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										{{ corporate_form.LGA.label }}
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.LGA }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										upload logo
+									</div>
+									<div class="col-md-8">
+										{{ corporate_form.company_logo }}
+										<small class="text-danger form-helptext">upload company logo in jpg, jpeg or png formats only. (optional)</small>
+									</div>
+									
+								</div>
+
+							</div>
+						</div>
+						<hr/>
+						<!-- <input type="submit"  class="btn btn-lemon pull-right" value = "Submit" onclick='this.form.submit()'/> -->
+						<button type="submit"  class="btn btn-lemon pull-right"  onclick='this.form.submit()'><h4>create account</h4></button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock portfolio %}
+
+
+
+
+
+
+
+
+

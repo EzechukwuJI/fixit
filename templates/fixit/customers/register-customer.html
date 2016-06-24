@@ -1,0 +1,112 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+	Create Regular Account
+{% endblock title %}
+
+{% block header %}
+<script src="{% static "fixit/js/fixit.js" %}"></script>
+<div class="row">
+	<div class="col-lg-6">
+    </div>
+    <div class="col-lg-6">
+    	<div class="row">
+    		<div class="col-lg-12 pull-left">
+    			<span class="btn btn-lemon">
+    				{% block top-header %}<h4> Sign up for a free account today </h4>{% endblock top-header %}
+    			</span>
+
+    			{% block caption %}
+    				
+    			{% endblock caption %}
+    		</div>
+    	</div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block portfolio %}
+
+{% if project_saved %}
+<div class="padding-lg-sides">
+	<div class="well well-success">
+		<span class="category-header"> 
+			<span class="text-warning"><i>Congratulations! </i></span>
+				 your project  <span class="text-warning">{{ my_project.job_title|title }}</span>  is now on display on our website <br/>
+			<small class="text-center"> You'll receive an email for every response to this project.</small><br/>
+			<small class="text-normal">You can view your project  
+			<a href = "/{{my_project.job_category.title_slug}}/{{my_project.job_id}}/{{my_project.title_slug}}" >here</a>
+			</small>
+		</span>
+	</div>
+</div>
+
+{% endif %}
+
+<div class="padding-sm-sides">
+	<div class="">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="pad-top-lg">
+					{% block rightbar %}
+
+						<div class="panel panel-warning"  role = "job creation form" style="border-radius:0px;">
+							<div class="panel bg-lemon" role="category based caption" style="border-radius:0px;">
+								<div class="panel-body">
+									<strong> We help you find competent tradesmen/contractors for timely and professional execution of your projects
+									</strong>
+									<br/>
+								</div>
+							</div>
+
+							<form action ="{% url 'fixitCustomers:sign-up-customer' %}" method="post" enctype="multipart/form-data" onsubmit="alert(form.formfields)">
+								{% csrf_token %}
+								{% if email_taken %}
+									<span class="text-danger padding-sm-sides">
+										Ooops! We are sorry but that email is already in use on this site
+									</span>
+								{% endif %}
+								
+									{% include 'fixit/partials/user_details.html' %}
+									<input type="hidden" name="sent_from" value="signup_form" />
+
+									<div class="panel-footer bg-lemon">
+										<div class="row pad-form">
+											<button name="submit" class="btn btn-lemon pull-right" /><h4> create Account </h4></button>
+										</div>
+									</div>
+								
+
+							</form>
+						</div>
+						
+					{% endblock rightbar %}
+				</div>
+			</div>
+			
+			{% block leftbar %}
+			<div class="col-lg-4 pull-right">
+				<p>
+				<!-- <div class="panel panel-warning">
+					<div class="panel-heading">
+						<strong>Benefits of creating an account</strong>
+					</div>
+					<div class="panel-body">
+						Once the emulator finishes launching, select it in the list of running devices (see Figure
+						2-12), and Mono for Android will deploy your application to the emulator. This
+						can take a little while the first time, as it installs the debug runtime, but subsequent
+						deployments will be much faster. Once the application starts up, it should look like
+						Figure 2-13. Congratulations—you have just built your first Android application!
+					</div>
+				</div> -->
+			</div>
+			{% endblock leftbar %}
+		</div>
+	</div>
+</div>
+{% endblock portfolio %}
+
+
+
+

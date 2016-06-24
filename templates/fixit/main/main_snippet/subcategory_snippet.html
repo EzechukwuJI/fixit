@@ -1,0 +1,5 @@
+{% for item in sub_cat_list %}
+	<option value= "{{ item.subcategory_title|slugify }}">{{ item.subcategory_title }}</option>
+{% empty %}
+	<option value="">-----------</option>
+{% endfor %}

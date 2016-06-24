@@ -1,0 +1,21 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+{% block portfolio %}
+
+<div class="padding-lg-sides text-primary">
+	<h4 class="text-left"> page not found </h4>
+	This usually happens when:
+	<li> you have a broken url </li>
+	Nevertheless, you can use the navigation button to continue or
+	{% if referer %}
+		<a href="{{ referer }}" class="btn btn-default"> Return to what you where doing </a>
+	{% endif %}
+
+
+	
+</div>
+
+
+
+{% endblock portfolio %}

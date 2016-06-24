@@ -1,0 +1,306 @@
+{% extends 'fixit/customers/base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+	<script>
+		$(document).ready(function(){
+			$('#message').click(function(){
+				$('#myModal').modal()
+			});
+			
+
+		});
+
+	</script>
+{% endblock header %}
+
+{% block portfolio %}
+<div class="padding-sm-sides">
+	<div class="row">
+	 	<div class="col-lg-12">
+	 		<div class="panel" >
+		 		<div class="dashboard-nav">
+		 			<div class="dashboard-nav-inline">
+			 			<ul>
+			 				<li>
+		                        <a  href="{% url "fixitCustomers:my-jobs" %}">My Jobs</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Account</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Wallet</a>
+		                    </li>
+			 			</ul>
+
+			 		</div>
+			 	</div>
+
+			 	<div class="row">
+			 		<div class="col-lg-9">
+			 			<div class="panel-body" style="padding-left: 0px; padding-right: 0px;" >
+	 						<strong>Project Title: </strong> {{ job.job_title|title }} <br/><br/>
+	 						<strong>Description</strong>
+	 						<small class="pull-right">Posted: {{ job.date_posted|date }} </small><br/>
+	 						<div class="well well-info">
+	 							{{ job.description|title }}
+	 							<br/>
+	 							{% if job.status == "Open" %}
+		 							<span class="pull-right">
+		 								<a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#jobEditModal">Edit Job Details</a>
+		 							</span>
+		 						{% endif %}
+	 							<br/>
+	 						</div>
+	 					</div>
+	 					<div class="panel-body" style="padding-left: 0px; padding-right: 0px;">
+	 				{% if responses %}
+	 					<strong>RESPONSES TO THIS JOB</strong><br/>
+	 					<small class="text-danger"> Click on the tradesman's name to view their profile and reviews</small><br/></br>
+	 						{% if not job_is_taken %}
+			 					{% for response in responses %}
+			 						<div class="panel panel-primary">
+			 							{% for tradesman in responders %}
+			 								{% if response.responder == tradesman.user.email %}
+			 									<div class="panel-heading">
+			 										<a href= "{% url "fixitTradesmen:profile" user_id=tradesman.userID %}">
+			 										 	<img class="thumbnail" src="{{ tradesman.company_logo.url }}" alt="{{ tradesman.company_name}}"/> &nbsp;
+			 										 	<strong>{{ tradesman.company_name|upper }} </strong>
+			 										</a>
+			 										<br/>
+			 										<small>Posted on: {{ response.date_posted }} </small><br/>
+			 									</div>
+			 								{% endif %}
+			 							{% endfor %}
+			 							<div class="panel-body bg-white">
+			 								<div class="row">
+			 									<div class="col-sm-8">
+			 										<strong>Message from Tradesman </strong><br/>
+		 											<blockquote class="bg-lemon">
+		 												<small class="text-primary">
+		 													{{ response.response_note }}
+		 													tradesman.company_name|title
+		 												</br><br/>
+		 												{% if not job.taken_by == " " %}
+		 													<small class="pull-right ">
+		 														<a href="#" data-toggle="modal" data-target="#myModal"> Reply </a>
+		 													</small>
+		 												{% endif %}
+		 													<br/>
+		 												</small>
+		 											</blockquote> 
+			 									</div>
+			 									<div class="col-sm-4">
+			 										<div class="text-danger">
+			 											<strong class="pull-right">
+			 												<p> &nbsp; </p>
+			 												Quoted Price:&nbsp;
+			 												 &#8358;{{ response.quoted_amount }}
+			 											</strong>
+			 										</div>
+			 										<p> &nbsp; </p>
+			 										<p> &nbsp; </p>
+			 										<div class="text-center">
+			 											{% for tradesman in responders %}
+			 												{% if response.responder == tradesman.user.email %}
+			 													<a href="{% url 'fixitCustomers:accept-tradesman' response.job_id.job_id tradesman.userID %}" class="btn btn-primary pull-right" >ACCEPT THIS <br/> TRADESMAN</a>
+			 												{% endif %}
+			 											{% endfor %}
+			 										</div>  
+			 									</div>
+			 								</div>
+
+			 							</div>
+			 						</div>			
+			 					{% endfor %} <!-- ends response loop -->
+			 				{% else %}
+
+			 					<!-- displays only if job is taken -->
+			 					<div class="panel panel-primary">
+			 							{% for tradesman in responders %}
+			 								{% if job.taken_by == tradesman.user.email %}
+			 									<div class="panel-heading">
+			 										<a href= "{% url "fixitTradesmen:profile" user_id=tradesman.userID %}">
+			 										 	<img class="thumbnail" src="{{ tradesman.company_logo.url }}" alt="{{ tradesman.company_name}}" /> &nbsp;
+			 										 	<strong>{{ tradesman.company_name|upper }} </strong>
+			 										</a>
+			 										<br/>
+			 										{% for response in responses %}
+			 											{% if response.responder == job.taken_by %}
+			 												<small>Posted on: {{ response.date_posted }} </small><br/>
+			 											{% endif %}
+			 										{% endfor %}
+			 									</div>
+			 								{% endif %}
+			 							{% endfor %}
+			 							<div class="panel-body bg-white">
+			 								<div class="row">
+			 									{% for response in responses %}
+			 										{% if response.responder == job.taken_by %}
+					 									<div class="col-sm-8">
+					 										<strong>Message from Tradesman </strong><br/>
+				 											<blockquote class="bg-lemon">
+				 												<small class="text-primary">
+				 													{{ response.response_note }}
+				 												</br>
+				 												<br/>
+				 												</small>
+				 											</blockquote>
+				 											<strong>Thread</strong><br/>
+				 											{% for message in messages %}
+																<div class="panel-body bg-lemon">
+																	<small class="pull-right">
+				 														{{message.sent_from.get_full_name }} 
+				 														&nbsp; | &nbsp;
+				 														{{ message.datetime_sent }}
+				 													</small>
+				 												<br/>
+				 												---
+																	{{ message.message|capfirst }}
+																</div>
+																<br/>
+															{% endfor %} 
+															<br/>
+															<span class="pull-right"><a href="#" data-toggle="modal" data-target="#myModal" class="btn-sm btn-primary" > Reply </a> </span>
+
+					 									</div>
+					 									<div class="col-sm-4">
+					 										<div class="text-danger">
+					 											<strong class="pull-right">
+					 												<p> &nbsp; </p>
+					 												Quoted Price:&nbsp;
+					 												 &#8358;{{ response.quoted_amount }}
+					 											</strong>
+					 										</div>
+					 										<p> &nbsp; </p>
+					 										<p> &nbsp; </p>
+					 										<div class="text-center">
+					 											{% for tradesman in responders %}
+					 												{% if job.taken_by == tradesman.user.email %}
+					 													<a href="" class="btn btn-success pull-right" disabled>ACCEPTED</a>
+					 												{% endif %}
+					 											{% endfor %}
+					 										</div>  
+					 									</div>
+					 								{% endif %}
+			 									{% endfor %}
+			 								</div>
+
+			 							</div>
+			 						</div>	
+
+
+			 				{% endif %} <!-- ends if job is not yet taken -->
+
+		 				{% else %}
+		 					<p> &nbsp; </p>
+		 					<p class="text-center"> No responses to this job yet </p>
+		 				{% endif %}
+
+		 				</div>
+			 		</div>
+
+			 		<div class="col-lg-3">
+			 			<!-- somethng else here -->
+			 		</div>
+			 	</div>
+	 		</div>
+	 	</div>
+	</div>
+</div>
+<!-- Modal -->
+<form action="{% url 'fixitCustomers:send-message' job_id=job.job_id %}" method="POST" >
+	{% csrf_token %}
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <strong class="modal-title" id="myModalLabel">Type your message below</strong>
+	      </div>
+	      <div class="modal-body">
+	        <textarea name = "message" class="form-control" style="width: 100%;"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
+	        <input type="submit" class="btn btn-lemon btn-sm" onclick='this.form.submit()'/>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</form>
+
+
+
+
+<!-- field edit job  modal form -->
+<form action="{% url "fixitCustomers:edit-job" job_id=job.job_id %}" method="POST">
+	{% csrf_token %}
+	<fieldset style="width: 125px;">
+	<div class="modal fade" id="jobEditModal" tabindex="-1" role="dialog" aria-labelledby="editJobLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <strong class="modal-title" id="myModalLabel">Edit Job details</strong><br/>
+	        <small class="text-primary"> Click on any field to overwrite content </small>
+	      </div>
+	      <div class="modal-body">
+	      	
+	      	<label for='title' class="text-normal">Job Title:</label><br/>
+	        <input type = "text" name="new_title" placeholder = "{{ job.job_title }}" class="form-control" /><br/>
+
+	      	<label for='description' class="text-normal">Description:</label><br/>
+	      	<textarea name="new_description" placeholder = "{{ job.description }}" class="form-control"></textarea><br/>
+	      	
+	      	<label for="startdateinput" class="text-normal">Expected Start Date </label><br/>
+					<select name="select_startdate" id ="startdateinput" class="btn-option-sm " >
+						<option value="" selected style="display:none">Select</option> 
+						<option value="Now" name="startdateoption" >Now</option>
+						<option value="1 week" name="startdateoption" >1 - Week</option> 
+						<option value="2 weeks" name="startdateoption" >2 - Weeks</option>
+						<option value="3 weeks" name="startdateoption" >3 - Weeks</option>
+						<option value="1 - 2 months" name="startdateoption" >1 - 2 Months</option>
+						<option value="3 - 6 months" name="startdateoption" >3 - 6 Months</option>   
+					</select><br/>
+
+			<label for="budgetinput" class="text-normal">Project Budget(&#8358;) </label><br/>
+					<select name="project_budget" id ="budgetinput" class="btn-option-sm " >
+						<option value="" selected style="display:none">Select</option> 
+						<option value="less_than_10k" name="budgetoption" >Less than &nbsp; &nbsp;10,000</option>
+						<option value="10k_to_20k" name="budgetoption" >10,000 &nbsp;&nbsp; to &nbsp; 20,000</option>
+						<option value="20k_to_50k" name="budgetoption" >20,000 &nbsp; &nbsp;to &nbsp; &nbsp;50,000</option>
+						<option value="50k_to_100k" name="budgetoption" >50,000 &nbsp; &nbsp;to 100,000</option>
+						<option value="100k_to_200k" name="budgetoption" >100,000 &nbsp;to 200,000</option>
+						<option value="200k_to_500k" name="budgetoption" >200,000 &nbsp;to 500,000</option>
+						<option value="500k_to_1m" name="budgetoption" >500,000 &nbsp;to 1 million</option>
+						<option value="1m_to_2m" name="budgetoption" >1 million &nbsp;to 2 million</option>
+						<option value="2m_to_5m" name="budgetoption" >2 million &nbsp;to 5 million</option>
+						<option value="above_5m" name="budgetoption" >above 5 million</option> 
+					</select>
+					<br/>
+
+					<label for="timeframeinput" class="text-normal">Completion Time </label><br/>
+					<select name="time_frame" id ="timeframeinput" class="btn-option-sm " >
+						<option value="" selected style="display:none">Select</option> 
+						<option value="Flexible" name="timeframeoption" >Flexible</option>
+						<option value="Less than 2 month" name="timeframeoption" >Less than 2 months</option> 
+						<option value="more than 2 months" name="timeframeoption" >More than 2 months</option> 
+					</select><br/>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
+	        <input type="submit" class="btn btn-lemon btn-sm" onclick='this.form.submit()'>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</fieldset>
+</form>
+
+{% endblock portfolio %}
+
+
+
+
+

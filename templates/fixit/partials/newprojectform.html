@@ -1,0 +1,339 @@
+<script>
+$(document).ready(function() {
+	$('#change_cat').click(function(evt){
+		evt.preventDefault();
+		$('#alt_category').show();
+	});
+
+	$('body').on('change', '#categoryinput', function(){
+		var post_data  = $('#categoryinput').find(':selected').attr('value');
+		var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+		function csrfSafeMethod(method){
+			// these HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings){
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain){
+					xhr.setRequestHeader("X-CSRFToken", csrf_token);
+				}
+			}
+		});
+			$.ajax({
+				url: "{% url 'fixitMain:createjob' %}",
+				type: "POST",
+				data: {category: post_data, csrfmiddlewaretoken: csrf_token, fieldname: "category" },
+				success: function(data){
+					$('#subcatinput').html(data);
+					$('#subcatinput').prop('readonly', false);
+				},
+				error: function(data){
+					console.log('Nothing happened');
+					$('#subcatinput').html('<option value="nothing">no sub_category found </option>');
+				}
+			})
+		}) 
+
+
+
+$('body').on('change', '#stateinput', function(){
+		var state      = $('#stateinput').find(':selected').attr('value');
+		var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+		function csrfSafeMethod(method){
+			// these HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings){
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain){
+					xhr.setRequestHeader("X-CSRFToken", csrf_token);
+				}
+			}
+		});
+		$.ajax({
+			url: "{% url 'fixitMain:createjob' %}",
+			type: "POST",
+			data: {selected_state: state, csrfmiddlewaretoken: csrf_token, fieldname: "state" },
+			success: function(data){
+				$('#areainput').html(data);
+				$('#areainput').prop('readonly',false);
+			},
+			error: function(data){
+				$('#areainput').html('<option value="nothing">error occured </option>');	
+			}
+		})
+}) 
+
+
+
+
+
+	// function getCookie(name)
+});   // ends document.ready
+	
+	var states =  ['Abia','Adamawa','Akwa-Ibom','Anambra','Bauchi','Benue','Borno',
+	    'Cross-River','Delta','Edo','Enugu','Lagos', 'Katsina']
+
+</script>
+	<fieldset>
+		<div class="row">
+			<div class="panel-body">
+			<div class="col-sm-6">
+				{% if user.is_authenticated %}
+					<div class="row">
+						<div class="col-md-4">
+							<label for="nameinput" class="text-normal">First Name</label>
+						</div>
+						<div class="col-md-8">
+							<input type = "text" name="fname" value = {{ user.first_name }} id ="nameinput" class="form-control formtext " readonly/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label for="emailinput" class="text-normal">Email</label>
+						</div>
+						<div class="col-md-8">
+							<input type = "email" name="email" value= '{{ user.email }}' id ="emailinput" class="form-control formtext " readonly/>
+						</div>
+					</div>
+				{% else %}
+					<div class="row">
+						<div class="col-md-4">
+							<label for="nameinput" class="text-normal">First Name</label>
+						</div>
+						<div class="col-md-8">
+							<input type = "text" name="fname"  id ="nameinput" class="form-control formtext " required/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label for="emailinput" class="text-normal">Email</label>
+						</div>
+						<div class="col-md-8">
+							<input type = "email" name="email"  id ="emailinput" class="form-control formtext " required/>
+						</div>
+					</div>
+
+				{% endif %}
+					<div class="row">
+						<div class="col-md-4">
+							<label for="job_titleinput" class="text-normal " >Project Title</label>
+						</div>
+						<div class="col-md-8">
+							<input type = "text" name="job_title"  id ="job_titleinput" class="form-control formtext " maxlength="100" required/>
+						</div>
+					</div>
+				{% if has_category %}
+					<div class="row">
+						<div class="col-md-4">
+							<span id="alt_cat">Category: </span>
+						</div>
+						<div class="col-md-8">
+								<input type = "text" name="preset_cat" value= '{{ category_title|capfirst }}' id ="preset_cat" class="form-control formtext" title="{{ category_title|capfirst }}" readonly/>
+						</div>
+					</div>
+					<input type="hidden" name="category" value= "{{ category_title|slugify }}" />
+
+					<div class="row">
+						<div class="col-md-4">
+							<label for="subcatinput" class="text-normal">Sub Category
+						</div>
+						<div class="col-md-8">
+							<select name="sub_category" id ="subcatinput" class="btn-option-sm" readonly >
+								<option value="" selected style="display:none" >Select sub category</option>
+								{% for sub_cat in subcategories %}
+									<option value="{{ sub_cat.title_slug }}">{{ sub_cat.subcategory_title }}</option> 
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				{% else %}
+					<div class="row">
+						<div class="col-md-4">
+							<label for="categoryinput" class="text-normal">Category</label>
+						</div>
+						<div class="col-md-8">
+							<select name="category" id ="categoryinput" class="btn-option-sm " >
+								<option value="Select Category" selected style="display:none">Select Category</option> 
+								{% for category in categories %}
+								<option value="{{category.title_slug }}" name="category" >{{category.category_title }}</option> 
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				
+					<div class="row">
+						<div class="col-md-4">
+							<label for="subcatinput" class="text-normal">Sub Category
+						</div>
+						<div class="col-md-8">
+							<select name="sub_category" id ="subcatinput" class="btn-option-sm" readonly >
+								<option value="" selected style="display:none" >Select sub category</option> 
+							</select>
+						</div>
+					</div>
+				{% endif %}	
+					<div class="row">
+						<div class="col-md-4">
+							<label for="startdateinput" class="text-normal">Start Date
+						</div>
+						<div class="col-md-8">
+							<select name="select_startdate" id ="startdateinput" class="btn-option-sm " >
+								<option value="" selected style="display:none">Select</option> 
+								<option value="Now" name="startdateoption" >Now</option>
+								<option value="1 week" name="startdateoption" >1 - Week</option> 
+								<option value="2 weeks" name="startdateoption" >2 - Weeks</option>
+								<option value="3 weeks" name="startdateoption" >3 - Weeks</option>
+								<option value="1 - 2 months" name="startdateoption" >1 - 2 Months</option>
+								<option value="3 - 6 months" name="startdateoption" >3 - 6 Months</option>   
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label for="descriptioninput" class="text-normal">Project Description</label><br/>
+						</div>
+						<div class="col-md-8">
+							<textarea name="job_description"  id ="descriptioninput" class="formtext"  cols = "27" rows = "2" Placeholder = "Give a brief description of the project " maxlength = "300" required></textarea><br/><small class="text-danger"> 300 characters </small>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="panel pad-form">
+								<strong> Materials to be supplied by: </strong>
+								<br/>
+								<input type = "radio" name="supplier" value="tradesman"  id ="tradesmaninput"/>
+								<label for="tradesmaninput" class="text-normal">Tradesman</label>
+								<br/>
+								<input type = "radio" name="supplier" value="N/A"  id ="NAinput" />
+								<label for="NAinput" class="text-normal">Not Applicable</label>
+								<br/>
+								<input type = "radio" name="supplier" value="client"  id ="clientinput"  checked="checked" />
+								<label for="clientinput" class="text-normal">Client</label>
+								<br/>
+								<input type = "radio" name="supplier" value="To be discussed"  id ="discuss"  />
+								<label for="discuss" class="text-normal">To be Discussed</label>
+								<br/>
+							</div>
+						</div>
+					</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-md-4">
+						<label for="zipcodeinput" class="text-normal">Zip Code</label>
+					</div>
+					<div class="col-md-8">
+						<input type = "text" name="zipcode"  id ="zipcodeinput" class="form-control formtext " maxlength="7" required/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="stateinput" class="text-normal" >State</label>
+					</div>
+					<div class="col-md-8">
+						<select name="state" id="stateinput" class="form-control formtext ">
+							<option selected disabled >Select </option>
+							<script>
+							for (var state in states ){
+								document.write(
+									'<option value=' + states[state] + '>' + states[state] + '</option>')
+							}
+							</script>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="areainput" class="text-normal" >Area</label>
+					</div>
+					<div class="col-md-8"> 
+						<select name="lga" id="areainput" class="form-control formtext" readonly>
+							<option selected disabled >Select </option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="statusinput" class="text-normal">Project Status
+					</div>
+					<div class="col-md-8">
+						<select name="project_status" id ="statusinput" class="btn-option-sm " >
+							<option value="" selected style="display:none">Select</option> 
+							<option value="planning" name="statusoption" >Planning and Budgeting</option>
+							<option value="ready" name="statusoption" >Ready to Hire</option>    
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="budgetinput" class="text-normal">Project Budget(&#8358;)
+					</div>
+					<div class="col-md-8">
+						<select name="project_budget" id ="budgetinput" class="btn-option-sm " >
+							<option value="" selected style="display:none">Select</option> 
+							<option value="less_than_10k" name="budgetoption" >Less than &nbsp; &nbsp;10,000</option>
+							<option value="10k_to_20k" name="budgetoption" >10,000 &nbsp;&nbsp; to &nbsp; 20,000</option>
+							<option value="20k_to_50k" name="budgetoption" >20,000 &nbsp; &nbsp;to &nbsp; &nbsp;50,000</option>
+							<option value="50k_to_100k" name="budgetoption" >50,000 &nbsp; &nbsp;to 100,000</option>
+							<option value="100k_to_200k" name="budgetoption" >100,000 &nbsp;to 200,000</option>
+							<option value="200k_to_500k" name="budgetoption" >200,000 &nbsp;to 500,000</option>
+							<option value="500k_to_1m" name="budgetoption" >500,000 &nbsp;to 1 million</option>
+							<option value="1m_to_2m" name="budgetoption" >1 million &nbsp;to 2 million</option>
+							<option value="2m_to_5m" name="budgetoption" >2 million &nbsp;to 5 million</option>
+							<option value="above_5m" name="budgetoption" >above 5 million</option> 
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="timeframeinput" class="text-normal">Completion Time
+					</div>
+					<div class="col-md-8">
+						<select name="time_frame" id ="timeframeinput" class="btn-option-sm " >
+							<option value="" selected style="display:none">Select</option> 
+							<option value="Flexible" name="timeframeoption" >Flexible</option>
+							<option value="Less than 2 month" name="timeframeoption" >Less than 2 months</option> 
+							<option value="more than 2 months" name="timeframeoption" >More than 2 months</option> 
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="panel pad-form">
+							<!-- VALIDATE FILE UPLOAD FIELD -->
+							<br/>
+							<div class="text-normal">
+								{% if invalid_upload %}
+									<span class="text-danger"> please upload appropriate file type(S)</span>
+								{% endif %}
+							<div class="row">
+								<div class="col-md-4">
+									{{ uploads_form.picture.label }}
+								</div>
+								<div class="col-md-8">
+									{{ uploads_form.picture }}
+								</div>
+							</div><br/>
+							<div class="row">
+								<div class="col-md-4">
+									{{ uploads_form.document.label }}
+								</div>
+								<div class="col-md-8">
+									{{ uploads_form.document }}
+								</div>
+							</div>
+							</div>
+							<small class="text-danger"> Optionally upload a picture or document.<br/>
+								Formats: (.doc, .docx, .pdf, .dwg) &amp;  (jpg, png, jpeg)<br/>
+								Not larger than 2mb
+							</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+			

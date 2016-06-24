@@ -1,0 +1,109 @@
+{% extends 'fixit/base.html' %}
+{% load staticfiles %}
+
+{% block portfolio %}
+
+{% block header %}	
+<script>
+	$(document).ready(function() {
+
+	    $('#cat_form').submit(function(){
+	       var  $this = $('#select-category');
+	        var selected = $this.find(":selected").text();
+	        if (selected === 'Search Job by categories'){
+	            $this.css('border-color','red');
+	            return false;
+	        }    
+	    });
+	})  // ends on ready function
+</script>
+<style>
+	.text-error{
+		color: red;
+	}
+</style>
+{% endblock header %}
+
+
+<div class="padding-lg-sides">
+	<!-- {% if inactive %}
+		<span class="alert alert-danger text-center">
+			This account has been deactivated. Please send a mail to activate@ndoozi.com 
+			<br/><br/>
+		</span>
+	{% elif  denied or error %}
+		<span class="text-danger text-center">
+			The login details you supplied are incorrect. Please check and try again.
+			<br/><br/>
+		</span>
+	{% elif is_tradesman %}
+		<span class="text-danger text-center">
+			Please log in with your customer account details
+			<br/><br/>
+		</span>
+	{% elif is_customer %}
+		<span class="text-danger text-center">
+			Please log in with your Tradesman account details
+			<br/><br/>
+		</span>
+	{% endif %} -->
+	
+	{% if messages %}
+		{% for msg in messages %}
+			<blockquote class="text-{{msg.tags}} bg-white"> {{ msg }} </blockquote>
+		{% endfor %}
+	{% endif %}
+	<div class="row bg-lemon">
+		<div class="col-lg-6 bg-primary">
+			<div class="row">
+				<h5 class="pull-left">&nbsp;&nbsp; LOGIN</h5>
+			</div>
+			<div class="padding-xs-sides">
+				<form action="{% url 'fixitMain:login' %}" method="POST" >
+					{% csrf_token %}
+					<fieldset class="padding-xs-sides">
+							{{ loginform.label}}
+							{{ loginform.as_p }}
+							{{ loginform.error }}
+							<input type="hidden" class="form-control" name="next" value = "{{ request.GET.next }}" />
+							
+							<br/><br/>
+
+						<button class="btn btn-lemon" onclick = 'this.form.submit()'>
+							<h4>Login</h4>
+						</button>
+						
+						<small>Forgot password 
+							<a href="">Click here </a>
+						</small>
+					</fieldset>
+				</form>
+				<!-- <p> &nbsp; </p> -->
+			</div>	
+		</div>
+		<div class="col-lg-6 bg-lemon">
+			<div class="row">
+				<h5 class="pull-left">&nbsp;&nbsp; Register</h5>
+			</div>
+			<h4 class="text-primary text-center">
+				Don't have any account yet? Register one here for free
+			</h4>
+			<p> &nbsp; </p>
+			<p> &nbsp; </p>
+			<div>
+				<div class="col-sm-6 text-center">
+					<a href="{% url 'fixitTradesmen:register-tradesman' source='new' %}" class="btn btn-primary"><h6>tradesman register</h6></a>
+				</div>
+				<div class="col-sm-6 text-center">
+					<a href="{% url 'fixitCustomers:register-customer' source='new' ref=1 %}" class= "btn btn-success"><h6>customer register</h6>
+					</a>
+					<p> &nbsp; </p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock portfolio %}

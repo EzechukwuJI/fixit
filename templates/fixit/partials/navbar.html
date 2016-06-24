@@ -1,0 +1,95 @@
+{% load staticfiles %}
+
+<script>
+    $(document).ready(function(){
+        // alert("sript is working")
+        $('.dropdown-toggle').dropdown()
+    })
+</script>
+
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url "fixitMain:index" %}">
+                    <img src="{% static 'fixit/img/ndoozi-logo.png' %}" alt="ndoozi.com"/>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:index" %}">Home</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:all-jobs" %}">View Jobs</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="{% url "fixitMain:postjob" category="new" %}">Find Professionals</a>
+                    </li>
+                    <!--<li class="page-scroll">-->
+                    <!--    <a href="{% url "fixitMain:about-us" %}">About</a>-->
+                    <!--</li>-->
+                    <!--<li class="page-scroll">-->
+                    <!--    <a href="{% url "fixitMain:FAQs" %}">Faq<span class="small">s</span></a>-->
+                    <!--</li>-->
+                    <!--<li class="page-scroll">-->
+                    <!--    <a href="{% url "fixitMain:contact-us" %}" >Contact</a>-->
+                    <!--</li>-->
+                    <li class="page-scroll">
+                        {% if not user.is_authenticated %}
+                            <a href="{% url "fixitMain:login" %}">Login</a>
+                        {% endif %}
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+            {% if user.is_authenticated %}
+
+                <div class="pull-right current-user text-primary" >
+                    <span >
+                        {% for group in user.groups.all %}
+                            <div class="dropdown">
+                                <span> Hi, &nbsp; </span>
+                                <a id="accounts" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                    {{ user.first_name|title }}<span class="caret"></span>
+                                </a>
+                                {% if group.name = 'Tradesman' %}
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="accounts">
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> My Account</a></li>
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> My profile</a></li>
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> My Jobs</a></li>
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> My Wallet</a></li>
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> History</a></li>
+                                        <li><a href="{% url "fixitTradesmen:tradesman-account" %}"> Messages</a></li>
+                                        <li><a href="{% url "fixitMain:logout" %}"> Sign out</a></li>
+                                    </ul>
+
+                                {% else %}
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <li><a  href="{% url "fixitCustomers:my-account" %}"> My Account</a></li>
+                                        <li><a  href="{% url "fixitCustomers:my-jobs" %}">My Jobs</a></li>
+                                        <li><a  href="{% url "fixitCustomers:my-account" %}"> My Wallet</a></li>
+                                        <!-- <li><a  href=""> My Archive</a></li> -->
+                                        <li><a href="{% url "fixitMain:postjob" category="new" %}"> Post New Job</a></li>
+                                        <li><a  href="{% url "fixitMain:logout" %}"> Sign out</a></li>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+
+
+

@@ -1,0 +1,94 @@
+{% extends 'fixit/customers/base.html' %}
+{% load staticfiles %}
+{% block portfolio %}
+<div class="padding-sm-sides">
+	<div class="row">
+	 	<div class="col-lg-10">
+	 		<div class="panel">
+		 		<div class="dashboard-nav">
+		 			<div class="dashboard-nav-inline">
+			 			<ul>
+			 				<li>
+		                        <a  href="{% url "fixitCustomers:my-jobs" %}">My Jobs</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Account</a>
+		                    </li>
+		                    <li>
+		                        <a href="{% url "fixitCustomers:my-account" %}">My Wallet</a>
+		                    </li>
+
+		                   <!--  <li class="pull-right">
+		                        <a href="" >My Jobs</a>
+		                    </li> -->
+			 			</ul>
+
+			 		</div>
+			 	</div>
+	 			<div class="panel-body" style="padding-left: 0px; padding-right: 0px;">
+				<table class="table table-striped table-hover table-bordered">
+					<small class="text-primary"> &nbsp; Click on the job title to view responses and choose a tradesman &nbsp; </small>
+					<thead class="bg-primary">
+						<!-- <th>Image</th> -->
+						<th>Title</th>
+						<th>Responses</th>
+						<th>Status</th>
+						<!-- <th>City</th> -->
+						<th>Date posted</th>
+						<!-- <th>Category</th> -->
+						<th class="text-center">Status </th>
+						<!-- <th></th> -->
+					</thead>
+					<tbody>
+						{% if not myjobs %}
+						<tr valign="center">
+							<td class="text-center" colspan=5 > <br/><br/>
+								<img src="{% static "fixit/img/welcome.JPG" %}" class="pull-left" alt="ndoozi.com" />
+								<i>Hello {{ user.get_full_name|title }} !!!</i> &nbsp; Welcome to Ndoozi.com, you trusted and loyal tradesmen finder <br/><br/>You have not posted any jobs yet. Post your first job 
+								<a href="{% url "fixitMain:postjob" category="new" %}"> <strong class="text-primary" >Here</strong></a>
+								<br/><br/>
+							</td>
+						</tr>
+						{% endif %}
+
+						{% for job in myjobs %}
+						<tr valign="center">
+							<td class="joblink" valign="center"> <a href = "{% url 'fixitCustomers:job_details' job_id=job.job_id %}"><strong> {{ job.job_title|capfirst }}</strong></a></td>
+							<td> {{ job.num_response }}</td>
+							<td> {{ job.status|capfirst }}</td>
+							<td> {{ job.date_posted|date }}</td>
+							<td>
+								{% if job.status == 'Open' %}
+									<!-- <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#jobEditModal" job-id='{{ job.job_id }}'>Edit</a> -->
+									<a href="{% url 'fixitCustomers:close-job' job.job_id %}" class="btn btn-info btn-sm pull-right">Close</a>
+								{% elif job.status == 'In Progress' %}
+									<button class="btn btn-warning btn-sm" disabled> {{ job.status }}</button>
+									<a href="{% url 'fixitCustomers:close-job' job.job_id %}" class="btn btn-info btn-sm pull-right">Close</a>
+								{% else %}
+									<button class="btn btn-success btn-sm pull-right" disabled> {{ job.status }}</button>
+								{% endif %}
+
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+	 			</div>
+
+	 		</div>
+	 	</div>
+
+	 	<div class="col-lg-2">
+	 		<div class="panel panel-primary">
+	 			something here
+	 		</div>
+	 	</div>
+	</div>
+</div>
+{% endblock portfolio %}
+
+
+
+
+
+

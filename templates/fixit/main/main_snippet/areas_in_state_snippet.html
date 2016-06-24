@@ -1,0 +1,5 @@
+{% for lga in areas_under_state %}
+	<option value="{{ lga.code }}">{{ lga.name }}</option>
+{% empty %}
+	<option value="">-----------</option>
+{% endfor %}

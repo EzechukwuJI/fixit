@@ -1,0 +1,156 @@
+{% extends 'fixit/customers/base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+	<script>
+		$(document).ready(function(){
+			$('#resetpw').click(function(){
+				$('#pwModal').modal()
+			});
+
+		function validate_entry(){
+			password = $('#password').text();
+			comparepw = $('#repeat_pw').text();
+
+			if (!(password === comparepw)){
+				alert("password mismatch");
+			}
+		}
+
+
+		});
+	</script>
+{% endblock header %}
+{% block portfolio %}
+<div class="padding-sm-sides">
+	<div class="row">
+ 		<div class="dashboard-nav">
+ 			<div class="dashboard-nav-inline">
+	 			<ul>
+	 				<li>
+                        <a  href="{% url "fixitCustomers:my-jobs" %}">My Jobs</a>
+                    </li>
+                    <li>
+                        <a href="{% url "fixitCustomers:my-account" %}">My Account</a>
+                    </li>
+                    <li>
+                        <a href="{% url "fixitCustomers:my-account" %}">My Wallet</a>
+                    </li>
+	 			</ul>
+	 		</div>
+	 	</div>
+	</div>
+	 	<!-- My account details from here -->
+	<div class="row bg-white">
+		{% if incorrect_pw %}
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					Password Change Unsuccessful!
+				</div>
+				<div class="panel-body">
+					Sorry! the old password you entered did not match any account.
+				</div> 
+			</div>
+		{% endif %}
+ 		<div class="col-sm-6">
+ 			<div class="userdetails">
+	 			<h6> Personal Details </h6><br/>
+	 			
+	 			<strong>Username: </strong> <span class="pull-right"> {{ current_user.customer.username }} </span><hr/>
+	 			<strong>First Name: </strong><span class="pull-right">{{ current_user.customer.first_name|title }} </span> <hr/>
+	 			<strong>Last Name: </strong><span class="pull-right">{{ current_user.customer.last_name|title }} </span><hr/>
+
+	 			<strong>Address: </strong><span class="pull-right">{{ current_user.address|title }} </span> 
+	 			<hr/>
+
+	 			<strong>City: </strong><span class="pull-right">{{ current_user.city|title }} </span> 
+	 			<hr/>
+
+
+	 			<strong>State: </strong><span class="pull-right"> {{ current_user.state|title }} 
+	 			</span>
+
+	 			<hr/>
+	 			<strong>Email: </strong><span class="pull-right">{{ current_user.customer.email }}</span> <hr/>
+	 			<strong>Phone Number: </strong><span class="pull-right"> {{ current_user.phone_no }} 
+	 			</span>
+	 			
+	 			<hr/>
+	 			<strong>Account Type </strong><span class="pull-right"> {{ current_user.account_type }} </span><hr/><br/>
+
+	 			<a href="#" data-toggle="modal" data-target="#pwModal" class ="resetpw">Change Password </a>
+	 			<!-- {% url 'fixitCustomers:reset-pw' %} -->
+
+	 			<div class="pull-right">
+	 				<a href="#" data-toggle="modal" data-target="#profileEditModal" class="text-info"> [&nbsp;Edit&nbsp;]</a>
+	 				 <br/><br/>
+	 			</div>
+	 		</div>
+ 		</div>
+ 		<div class="col-sm-6">
+ 			<div class="padding-sm-sides">
+ 				<!-- <img src="" class="img-circle" alt="profile pix" /> -->
+ 			</div> 
+ 		</div>
+	</div>
+</div>
+<!-- field edit  modal form -->
+<form action="{% url "fixitCustomers:edit-profile" %}" method="POST">
+	{% csrf_token %}
+	<fieldset style="width: 125px;">
+	<div class="modal fade" id="profileEditModal" tabindex="-1" role="dialog" aria-labelledby="editcityLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <strong class="modal-title" id="myModalLabel">Edit Profile</strong>
+
+	      </div>
+	      <div class="modal-body">
+	      	<small class="text-primary"> Re enter existing information if no change</small> <br/>
+	      	<textarea name="currentaddress" placeholder = "Enter new address" class="form-control"></textarea><br/>
+	        <input type = "text" name="currentcity" placeholder = "Enter current city" class="form-control" /><br/>
+	        <input type = "text" name="new_state"   placeholder = "Enter new state" class="form-control" /><br/>
+	        <input type = "text" name="new_phone"   placeholder = "Enter new phone" class="form-control" /><br/>
+
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
+	        <input type="submit" class="btn btn-lemon btn-sm" onclick='this.form.submit()'>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</fieldset>
+</form>
+
+<!-- Modal -->
+<form action="{% url 'fixitCustomers:reset-pw' %}" method="POST">
+	{% csrf_token %}
+	<fieldset style="width: 70%;">
+	<div class="modal fade" id="pwModal" tabindex="-1" role="dialog" aria-labelledby="pwModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <strong class="modal-title" id="myModalLabel">Reset Password</strong>
+	      </div>
+	      <div class="modal-body">
+	        <input type = "password" name="oldpassword" class="form-control" placeholder = "Old password" /><br/>
+	        <input type = "hidden" name="oldpasswordhidden"  value= "{{user.password}}" />
+	        <input type = "password" name="newpassword" class="form-control" id="password" placeholder = "New password" /><br/>
+	        <input type = "password" name="newpasswordconfirm" id ="repeat_pw" class="form-control" placeholder = "Re-enter New password" />
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
+	        <input type="submit" class="btn btn-lemon btn-sm" onclick='this.form.submit()'>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</form>
+{% endblock portfolio %}
+
+
+
